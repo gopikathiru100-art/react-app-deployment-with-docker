@@ -4,8 +4,8 @@
 docker login -u $DOCKER_USERNAME -p $DOCKER_PASS
 
 #stopping existing container:
-docker stop react
-docker rm react
+docker stop 1f431b123be4
+docker rm 1f431b123be4
 
 #building a image:
 docker build -t react-ci/cd .
