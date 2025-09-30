@@ -2,8 +2,8 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_USERNAME = credentials('docker-username')   // Jenkins credentials ID for DockerHub username
-        DOCKER_PASS     = credentials('docker-password')   // Jenkins credentials ID for DockerHub password
+        DOCKER_USERNAME = credentials('docker-username')   // Jenkins credentials ID
+        DOCKER_PASS     = credentials('docker-password')   // Jenkins credentials ID
     }
 
     stages {
@@ -19,7 +19,7 @@ pipeline {
             }
         }
 
-        stage('Build & Deploy Docker Container') {
+        stage('Build, Push & Deploy') {
             steps {
                 sh './build.sh'
             }
