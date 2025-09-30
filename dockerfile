@@ -1,30 +1,29 @@
-#choosing the base image as the build stage:
-FROM node:14-alpine as build 
+# Use latest LTS Node instead of old Node 14
+FROM node:18-alpine AS build
 
-#choosing working directory for the application:
+# Set working directory
 WORKDIR /app
 
-#copying the package.json file to app directory and installing packages:
-COPY package.json .
+# Copy only package files first (better caching)
+COPY package*.json ./
+
+# Install dependencies
 RUN npm install
 
-#copying the rest of application code to the working directory:
+# Copy rest of the app
 COPY . .
 
-#building the application:
-RUN npm run build 
+# Build the React app
+RUN npm run build
 
-#second stage base image:
-FROM nginx:alpine
+# Use Nginx to serve the production build
+FROM nginx:stable-alpine
 
-#setting the working directory for this base image:
-WORKDIR /usr/share/nginx/html/
+# Copy build output to Nginx html directory
+COPY --from=build /app/build /usr/share/nginx/html
 
-#copying the first stage code to this stage
-COPY --from=build /app/build .
-
-#exposing the application:
+# Expose port 80
 EXPOSE 80
 
-#Executing the application after creating image:
+# Start Nginx
 CMD ["nginx", "-g", "daemon off;"]
